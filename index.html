@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<!-- saved from url=(0051)file:///C:/Users/Student/Downloads/index%20(1).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartResolve Service Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <style>
+/* Layout: sticky section nav, navy masthead with module details, then one wide column per deliverable (ticket log, SOP, emails, change request, innovation, references) */
+:root {
+  --bg: #f4f7fa;
+  --surface: #ffffff;
+  --fg: #0e2233;
+  --muted: #5a6b7b;
+  --line: #d6dfe8;
+  --brand: #0a3d62;
+  --brand-fg: #ffffff;
+  --accent: #1f6fcf;
+  --accent-soft: #e4effb;
+  --high: #b3261e;
+  --high-soft: #fbe3e1;
+  --ok: #1b7a46;
+  --ok-soft: #dff3e7;
+  --warn: #8a5a00;
+  --warn-soft: #fbefd2;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "IBM Plex Serif", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1620; --surface: #122230; --fg: #e6eef6; --muted: #92a5b6; --line: #25394b;
+    --brand: #0a3d62; --brand-fg: #ffffff; --accent: #6aaef5; --accent-soft: #17324d;
+    --high: #ff8a80; --high-soft: #3a1c1d; --ok: #6fd69a; --ok-soft: #14301f; --warn: #f0c25c; --warn-soft: #33290f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1620; --surface: #122230; --fg: #e6eef6; --muted: #92a5b6; --line: #25394b;
+  --brand: #0a3d62; --brand-fg: #ffffff; --accent: #6aaef5; --accent-soft: #17324d;
+  --high: #ff8a80; --high-soft: #3a1c1d; --ok: #6fd69a; --ok-soft: #14301f; --warn: #f0c25c; --warn-soft: #33290f;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 400 16px/1.6 var(--font-body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+a { color: var(--accent); }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.wrap { max-width: 1040px; margin: 0 auto; }
+
+/* nav */
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))) ; padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+.nav .wrap { display: flex; align-items: center; gap: 1.5rem; min-height: 3.25rem; }
+.brand { font-weight: 700; letter-spacing: .01em; white-space: nowrap; }
+.brand span { opacity: .65; font-weight: 500; }
+.nav ul { display: flex; gap: .25rem; list-style: none; margin: 0 0 0 auto; padding: 0; overflow-x: auto; scrollbar-width: none; }
+.nav a { color: var(--brand-fg); text-decoration: none; font-size: .875rem; padding: .5rem .75rem; border-radius: 6px; white-space: nowrap; display: block; opacity: .85; }
+.nav a:hover { background: rgba(255,255,255,.14); opacity: 1; }
+
+/* masthead */
+.mast { background: var(--brand); color: var(--brand-fg); margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding-inline: max(16px, env(safe-area-inset-left, 0px)); }
+.eyebrow { font: 500 .75rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; opacity: .75; margin: 0 0 1rem; }
+.mast h1 { font: 600 clamp(2.1rem, 6vw, 3.6rem)/1.08 var(--font-display); margin: 0 0 .75rem; text-wrap: balance; }
+.mast .sub { font-size: 1.2rem; max-width: 40rem; margin: 0 0 2rem; opacity: .92; }
+.meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 1px; background: rgba(255,255,255,.22); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; overflow: hidden; }
+.meta div { background: var(--brand); padding: .85rem 1rem; min-width: 0; }
+.meta dt { font: 500 .68rem/1 var(--font-mono); letter-spacing: .12em; text-transform: uppercase; opacity: .65; margin-bottom: .4rem; }
+.meta dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+
+/* sections */
+section.block { padding-block: 3.5rem 1rem; }
+.sec-head { display: grid; gap: .5rem; margin-bottom: 1.5rem; max-width: 46rem; }
+.tag { font: 500 .72rem/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent); }
+h2 { font: 600 clamp(1.6rem, 4vw, 2.2rem)/1.15 var(--font-display); margin: 0; text-wrap: balance; }
+.lead { color: var(--muted); margin: 0; }
+h3 { font-size: 1.05rem; margin: 0 0 .5rem; }
+.cite { font-size: .85rem; color: var(--muted); margin-top: 1rem; border-top: 1px solid var(--line); padding-top: .75rem; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 1.25rem; min-width: 0; }
+
+/* tickets */
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .75rem; margin-bottom: 1.25rem; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: .9rem 1rem; }
+.stat b { display: block; font: 600 1.9rem/1 var(--font-display); font-variant-numeric: tabular-nums; }
+.stat span { font-size: .8rem; color: var(--muted); }
+.stat.high b { color: var(--high); }
+.filters { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin-bottom: 1rem; align-items: center; }
+.fgroup { display: flex; gap: .35rem; flex-wrap: wrap; align-items: center; }
+.fgroup > span { font: 500 .7rem/1 var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-right: .25rem; }
+.chip { font: 500 .85rem/1 var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: .5rem .8rem; border-radius: 999px; cursor: pointer; }
+.chip:hover { border-color: var(--accent); }
+.chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: var(--brand-fg); }
+.tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 760px; font-size: .92rem; }
+th { background: var(--brand); color: var(--brand-fg); text-align: left; font-weight: 600; padding: .7rem .9rem; white-space: nowrap; }
+td { padding: .75rem .9rem; border-top: 1px solid var(--line); vertical-align: top; }
+tr.is-high td { background: var(--high-soft); color: var(--high); font-weight: 700; }
+td.id { font-family: var(--font-mono); white-space: nowrap; }
+td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pill { display: inline-block; font-size: .78rem; font-weight: 600; padding: .2rem .6rem; border-radius: 999px; background: var(--accent-soft); color: var(--accent); white-space: nowrap; }
+.pill.resolved { background: var(--ok-soft); color: var(--ok); }
+.pill.open { background: var(--warn-soft); color: var(--warn); }
+tr.is-high .pill { background: var(--surface); color: var(--high); }
+.empty { padding: 1.5rem; text-align: center; color: var(--muted); }
+.legend { display: flex; gap: .6rem; align-items: center; font-size: .85rem; color: var(--muted); margin: .75rem 0 0; }
+.legend i { width: 1rem; height: 1rem; border-radius: 3px; background: var(--high-soft); border: 1px solid var(--high); display: inline-block; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem; }
+.fieldlist { margin: 0; padding: 0; list-style: none; display: grid; gap: .4rem; }
+.fieldlist li { display: flex; gap: .6rem; align-items: baseline; }
+.fieldlist code { font: 500 .8rem var(--font-mono); background: var(--accent-soft); color: var(--accent); padding: .1rem .4rem; border-radius: 4px; white-space: nowrap; }
+.branch { border-left: 4px solid var(--accent); }
+.branch .rule { font: 500 .88rem/1.5 var(--font-mono); background: var(--accent-soft); padding: .75rem; border-radius: 6px; margin: .5rem 0 0; }
+
+/* SOP */
+.sop { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 2rem; align-items: start; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.steps li { position: relative; padding: 0 0 1.5rem 3.25rem; counter-increment: s; }
+.steps li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--brand); color: var(--brand-fg); display: grid; place-items: center; font-weight: 700; }
+.steps li::after { content: ""; position: absolute; left: 1.1rem; top: 2.5rem; bottom: .25rem; width: 2px; background: var(--line); }
+.steps li:last-child::after { display: none; }
+.steps h3 { margin: 0 0 .15rem; display: flex; flex-wrap: wrap; gap: .25rem .75rem; align-items: baseline; }
+.sla { font: 500 .75rem var(--font-mono); color: var(--accent); background: var(--accent-soft); padding: .15rem .5rem; border-radius: 4px; white-space: nowrap; }
+.steps p { margin: 0; color: var(--muted); }
+.triggers { margin: .5rem 0 0; padding-left: 1.1rem; color: var(--fg); }
+.triggers li { padding: 0; counter-increment: none; position: static; }
+.triggers li::before, .triggers li::after { content: none; }
+figure { margin: 0; background: #f4f4fb; border: 1px solid var(--line); border-radius: 10px; padding: 1rem; position: sticky; top: 5rem; }
+figure svg { display: block; margin: 0 auto; width: 100%; height: auto; max-width: 400px; }
+figure .ln path { fill: none; stroke: #4a5b9a; stroke-width: 2; marker-end: url(#ah); }
+figure .b1 { fill: #7fb0ec; } figure .b2 { fill: #7a5fc0; } figure .b3 { fill: #5a9de0; } figure .dc { fill: #8f6fd0; }
+figure .tx text { font: 600 14px var(--font-body); fill: #0b1b33; }
+figure .tx text.dt, figure .tx text.wh { fill: #fff; }
+figure .tx text.sm { font-weight: 400; font-size: 11px; }
+figure .tx text.yn { fill: #4a3f9a; font-size: 13px; }
+figcaption { font-size: .82rem; color: #4a5568; text-align: center; margin-top: .6rem; }
+
+/* emails */
+.tabs { display: flex; gap: .4rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.tab { font: 500 .9rem var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--fg); padding: .6rem 1rem; border-radius: 8px; cursor: pointer; }
+.tab[aria-selected="true"] { background: var(--brand); color: var(--brand-fg); border-color: var(--brand); }
+.mail { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.mail header { padding: 1rem 1.25rem; background: var(--accent-soft); border-bottom: 1px solid var(--line); display: grid; gap: .25rem; }
+.mail header small { font: 500 .7rem var(--font-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.mail header strong { overflow-wrap: anywhere; }
+.mail .body { padding: 1.25rem; display: grid; gap: .8rem; max-width: 40rem; }
+.mail .body p { margin: 0; }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem; padding: .85rem 1rem; background: var(--bg); border-radius: 8px; margin: 0; }
+.kv dt { color: var(--muted); }
+.kv dd { margin: 0; font-weight: 500; }
+.sig { color: var(--muted); }
+
+/* change request */
+.cr { display: grid; gap: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.cr-row { display: grid; grid-template-columns: 11rem minmax(0, 1fr); border-top: 1px solid var(--line); }
+.cr-row:first-child { border-top: 0; }
+.cr-row > div { padding: .9rem 1.1rem; min-width: 0; }
+.cr-row > div:first-child { background: var(--accent-soft); font-weight: 600; color: var(--brand); }
+:root[data-theme="dark"] .cr-row > div:first-child { color: var(--accent); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .cr-row > div:first-child { color: var(--accent); } }
+.sign { display: flex; flex-wrap: wrap; gap: .5rem; }
+.sign span { border-bottom: 2px solid var(--fg); padding: .1rem .2rem .25rem; min-width: 8rem; font-size: .85rem; }
+.sign em { display: block; font-style: normal; font: 500 .7rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 1.4rem; }
+.badge-high { color: var(--high); font-weight: 700; }
+
+/* innovation */
+.innov { background: var(--brand); color: var(--brand-fg); border-radius: 12px; padding: clamp(1.25rem, 4vw, 2.25rem); display: grid; gap: 1.5rem; }
+.innov h3 { font: 600 1.6rem/1.2 var(--font-display); margin: 0; }
+.innov p { margin: 0; opacity: .92; max-width: 44rem; }
+.rule-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1px; background: rgba(255,255,255,.22); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; overflow: hidden; }
+.rule-grid div { background: var(--brand); padding: 1rem; }
+.rule-grid b { display: block; font: 600 1.7rem/1 var(--font-display); margin-bottom: .35rem; }
+.rule-grid span { font-size: .88rem; opacity: .85; }
+
+/* references */
+.refs { margin: 0; padding: 0; list-style: none; display: grid; gap: 1rem; }
+.refs li { padding-left: 1.5rem; text-indent: -1.5rem; overflow-wrap: anywhere; }
+.refs em { font-style: italic; }
+
+footer { margin-top: 4rem; margin-inline: calc(-1 * max(16px, env(safe-area-inset-left, 0px))); padding: 1.75rem max(16px, env(safe-area-inset-left, 0px)) 2.5rem; background: var(--brand); color: var(--brand-fg); }
+footer p { margin: 0 0 .5rem; opacity: .88; }
+footer .wrap > p:first-child { font-weight: 600; opacity: 1; }
+
+@media (max-width: 760px) {
+  .sop { grid-template-columns: minmax(0, 1fr); }
+  figure { position: static; }
+  .cr-row { grid-template-columns: minmax(0, 1fr); }
+  .nav .wrap { gap: .75rem; }
+  .brand span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<nav class="nav" aria-label="Sections">
+  <div class="wrap">
+    <div class="brand">SmartResolve <span>· NovaTech</span></div>
+    <ul>
+      <li><a href="#tickets">Ticket log</a></li>
+      <li><a href="#sop">SOP</a></li>
+      <li><a href="#emails">Emails</a></li>
+      <li><a href="#change">Change request</a></li>
+      <li><a href="#innovation">Innovation</a></li>
+      <li><a href="#references">References</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="eyebrow">IT Support Blueprint · Module XHIS5122/p · Group 1</p>
+    <h1>SmartResolve Service Desk</h1>
+    <p class="sub">A ticket logging system, escalation procedure, communication templates and change process for NovaTech Solutions (Pty) Ltd.</p>
+    <dl class="meta">
+      <div><dt>Student</dt><dd>Thato Ndlovu</dd></div>
+      <div><dt>Student no.</dt><dd>ST10530324</dd></div>
+      <div><dt>Campus</dt><dd>MSA Campus Pretoria</dd></div>
+      <div><dt>Module</dt><dd>IT Systems Management</dd></div>
+      <div><dt>Date</dt><dd>September 2026</dd></div>
+    </dl>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section class="block" id="tickets">
+  <div class="sec-head">
+    <span class="tag">A · Ticket logging system</span>
+    <h2>Every request gets an ID, a priority and an owner</h2>
+    <p class="lead">Built in Excel with Data Validation and Conditional Formatting, in corporate blue (#0A3D62). Microsoft Forms with branching logic is the alternative. The table below is the wo
+[...]</p>
+  </div>
+
+  <div class="stats" id="stats" aria-live="polite"><div class="stat"><b>5</b><span>Total tickets</span></div><div class="stat high"><b>2</b><span>High priority</span></div><div class="stat"><b>2</b><span>In progress</span></div><div class="stat"><b>1</b><span>Resolved</span></div></div>
+
+  <div class="filters">
+    <div class="fgroup" id="fPriority" role="group" aria-label="Filter by priority"><span>Priority</span><button type="button" class="chip" aria-pressed="true">All</button><button type="button" class="chip" aria-pressed="false">High</button><button type="button" class="chip" aria-pressed="false">Medium</button><button type="button" class="chip" aria-pressed="false">Low</button></div>
+    <div class="fgroup" id="fStatus" role="group" aria-label="Filter by status"><span>Status</span><button type="button" class="chip" aria-pressed="true">All</button><button type="button" class="chip" aria-pressed="false">Open</button><button type="button" class="chip" aria-pressed="false">In Progress</button><button type="button" class="chip" aria-pressed="false">Resolved</button></div>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr>
+        <th>Incident ID</th><th>Request category</th><th>Priority</th><th>Short description</th><th>Assigned technician</th><th>Resolution time</th><th>Status</th>
+      </tr></thead>
+      <tbody id="rows"><tr class="is-high"><td class="id">NT-2026-001</td><td>Network Connectivity</td><td>High</td><td>Internet/Wi-Fi failure for 5 users – warehouse VLAN 20</td><td>Alex Rivera</td><td class="num">2h 15m</td><td><span class="pill">In Progress</span></td></tr><tr><td class="id">NT-2026-002</td><td>Software</td><td>Medium</td><td>Password reset for user j.doe@novatech.com</td><td>Maya Kim</td><td class="num">45m</td><td><span class="pill resolved">Resolved</span></td></tr><tr><td class="id">NT-2026-003</td><td>Hardware</td><td>Low</td><td>Mouse not responsive – desk 17 replaced</td><td>Liam Chen</td><td class="num">30m</td><td><span class="pill resolved">Resolved</span></td></tr><tr class="is-high"><td class="id">NT-2026-004</td><td>Server Outage</td><td>High</td><td>DB Server CRMPROD01 unresponsive, service outage</td><td>Priya Singh</td><td class="num">4h 03m</td><td><span class="pill">In Progress</span></td></tr><tr><td class="id">NT-2026-005</td><td>Software</td><td>Medium</td><td>ERP login error – permission denied for accounting team</td><td>Jordan Lee</td><td class="num">1h 20m</td><td><span class="pill open">Open</span></td></tr></tbody>
+    </table>
+    <div class="empty" id="empty" hidden="">No tickets match these filters.</div>
+  </div>
+  <p class="legend"><i></i> High priority rows are shaded red and set in bold.</p>
+
+  <div class="cols">
+    <div class="panel">
+      <h3>Fields captured</h3>
+      <ul class="fieldlist">
+        <li><code>Incident ID</code> auto-generated, e.g. NT-2026-001</li>
+        <li><code>Request Category</code> drop-down menu</li>
+        <li><code>Priority Level</code> Low / Medium / High</li>
+        <li><code>Short Description</code></li>
+        <li><code>Assigned Technician</code></li>
+        <li><code>Resolution Time</code></li>
+        <li><code>Current Status</code> Open / In Progress / Resolved</li>
+      </ul>
+    </div>
+    <div class="panel branch">
+      <h3>Branching logic</h3>
+      <p>When the category is Internet/Wi-Fi and the issue affects 5 or more users, the ticket escalates to Level 2 within 24 hours. The form then asks one extra question: "Single or multiple use[...]</p>
+      <p class="rule">IF category = Internet/Wi-Fi AND users ≥ 5<br>THEN escalate to Level 2 (24 h) + ask "Single or multiple users?"</p>
+    </div>
+  </div>
+  <p class="cite">Priority Level uses conditional formatting to highlight High priority tickets, as recommended by ITIL incident management (Axelos, 2019).</p>
+</section>
+
+<section class="block" id="sop">
+  <div class="sec-head">
+    <span class="tag">B · Standard operating procedure</span>
+    <h2>Ticket handling, from logging to closure</h2>
+    <p class="lead">The Team Leader runs the process. Each step has a time limit, and three conditions trigger escalation.</p>
+  </div>
+  <div class="sop">
+    <ol class="steps">
+      <li>
+        <h3>Logging <span class="sla">0–15 min</span></h3>
+        <p>The Team Leader records the issue in the system and generates a unique Incident ID.</p>
+      </li>
+      <li>
+        <h3>Categorization <span class="sla">15–30 min</span></h3>
+        <p>The Team Leader validates all required fields to ensure accurate classification.</p>
+      </li>
+      <li>
+        <h3>Level 1 resolution <span class="sla">within 2 hours</span></h3>
+        <p>Initial triage uses the Knowledge Base. Password-related issues are fixed with Active Directory resets.</p>
+      </li>
+      <li>
+        <h3>Escalation decision</h3>
+        <p>Escalate when any of these is true:</p>
+        <ul class="triggers">
+          <li>The issue is unresolved after two follow-ups.</li>
+          <li>Network downtime exceeds 30 minutes.</li>
+          <li>More than five users are affected (e.g. VLAN 20).</li>
+        </ul>
+      </li>
+      <li>
+        <h3>Level 2 resolution <span class="sla">within 24 hours</span></h3>
+        <p>The Team Leader investigates deeper network issues: SSH access to switches, VLAN configuration, DHCP and DNS (8.8.8.8).</p>
+      </li>
+      <li>
+        <h3>Level 3 resolution <span class="sla">within 48 hours or complex cases</span></h3>
+        <p>For advanced issues the Team Leader starts a Change Request Form and coordinates with administrators or vendors as needed.</p>
+      </li>
+      <li>
+        <h3>Closure</h3>
+        <p>Final testing is done, the resolution time is updated, the status is set to Resolved and a resolution email goes to the user.</p>
+      </li>
+    </ol>
+    <figure>
+      <svg viewBox="0 0 360 640" role="img" aria-label="Flowchart: log issue, categorize, Level 1 quick fixes, then if not fixed Level 2 and Level 3, then close ticket and notify user.">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4a5b9a"></path></marker></defs>
+        <g class="ln"><path d="M180 52V72"></path><path d="M180 122V142"></path><path d="M180 192V212"></path><path d="M180 322V362"></path><path d="M180 412V442"></path><path d="M180 492V532"></path></g>
+        <g class="bx">
+          <rect class="b1" x="50" y="10" width="260" height="42" rx="9"></rect><rect class="b1" x="50" y="80" width="260" height="42" rx="9"></rect><rect class="b1" x="50" y="150" width="260" hei
+[...]
+        </g>
+        <g class="tx" text-anchor="middle">
+          <text x="180" y="36">Log Issue &amp; Create Ticket ID</text><text x="180" y="106">Check &amp; Categorize Issue</text><text x="180" y="176">Level 1: Quick Fixes</text>
+          <text class="dt" x="180" y="277">Fixed?</text>
+          <text class="wh" x="180" y="383">Level 2: Advanced Help</text><text class="sm wh" x="180" y="401">within 24 hours</text>
+          <text class="wh" x="180" y="463">Level 3: Expert Assistance</text><text class="sm wh" x="180" y="481">within 48 hours</text>
+          <text x="180" y="553">Close Ticket &amp; Notify User</text><text class="sm" x="180" y="571">Final test, status = Resolved</text>
+          <text class="yn" x="276" y="262">Yes</text><text class="yn" x="196" y="345" text-anchor="start">No</text>
+        </g>
+      </svg>
+      <figcaption>Ticket Handling SOP flowchart. If the issue is fixed at Level 1, the Yes line goes straight to closure.</figcaption>
+    </figure>
+  </div>
+  <p class="cite">Escalation to Level 2 within 24 hours if downtime exceeds 30 minutes (The Independent Institute of Education, 2026).</p>
+</section>
+
+<section class="block" id="emails">
+  <div class="sec-head">
+    <span class="tag">C · Email templates</span>
+    <h2>Three messages keep the user informed</h2>
+    <p class="lead">Acknowledgement, delay notification and resolution. Each is signed by Team Leader Thato Ndlovu.</p>
+  </div>
+  <div class="tabs" role="tablist" aria-label="Email templates">
+    <button class="tab" role="tab" id="t0" aria-selected="true" aria-controls="p0">1. Acknowledgement</button>
+    <button class="tab" role="tab" id="t1" aria-selected="false" aria-controls="p1" tabindex="-1">2. Progress update</button>
+    <button class="tab" role="tab" id="t2" aria-selected="false" aria-controls="p2" tabindex="-1">3. Resolution</button>
+  </div>
+
+  <article class="mail" role="tabpanel" id="p0" aria-labelledby="t0">
+    <header><small>Ticket acknowledgement · auto-response</small><strong>Subject: Ticket Received – [NT-2026-00X]</strong></header>
+    <div class="body">
+      <p>Dear User,</p>
+      <p>Your request, "[Short Description]", has been successfully logged.</p>
+      <dl class="kv">
+        <dt>Ticket ID</dt><dd>NT-2026-00X</dd>
+        <dt>Priority</dt><dd class="badge-high">High</dd>
+        <dt>Assigned to</dt><dd>Team Leader</dd>
+      </dl>
+      <p>We'll respond within the SLA timeframe (Level 1 – 2 hours). You can track progress in SmartResolve.</p>
+      <p class="sig">Regards,<br>NovaTech Solutions | Help Desk<br>Team Leader Thato Ndlovu</p>
+    </div>
+  </article>
+
+  <article class="mail" role="tabpanel" id="p1" aria-labelledby="t1" hidden="">
+    <header><small>Progress update · delay notification</small><strong>Subject: Update – Ticket NT-2026-00X In Progress</strong></header>
+    <div class="body">
+      <p>Dear User,</p>
+      <p>Your ticket is still being processed.</p>
+      <dl class="kv">
+        <dt>Current status</dt><dd>Level 2 investigation for VLAN 20 (Warehouse)</dd>
+        <dt>Expected resolution</dt><dd>24 hours</dd>
+      </dl>
+      <p>We apologize for the delay and appreciate your patience. We'll keep you informed of further updates.</p>
+      <p class="sig">Kind regards,<br>NovaTech Solutions | Help Desk<br>Team Leader Thato Ndlovu</p>
+    </div>
+  </article>
+
+  <article class="mail" role="tabpanel" id="p2" aria-labelledby="t2" hidden="">
+    <header><small>Ticket resolution · confirmation</small><strong>Subject: Resolved – Ticket NT-2026-00X Closed</strong></header>
+    <div class="body">
+      <p>Dear User,</p>
+      <p>Your issue, "[Password Reset / Wi-Fi]", has been resolved.</p>
+      <dl class="kv">
+        <dt>Resolution time</dt><dd>45 minutes</dd>
+        <dt>Root cause</dt><dd>Active Directory lockout</dd>
+      </dl>
+      <p>Please confirm closure within 24 hours. Thank you for your cooperation.</p>
+      <p class="sig">Regards,<br>NovaTech Solutions | Help Desk<br>Team Leader Thato Ndlovu</p>
+    </div>
+  </article>
+  <p class="cite">Formatted per TEWC5111 professional communication standards (The Independent Institute of Education, 2026).</p>
+</section>
+
+<section class="block" id="change">
+  <div class="sec-head">
+    <span class="tag">D · Change request template</span>
+    <h2>Upgrading Wi-Fi routers or firewall software</h2>
+    <p class="lead">The Level 3 route for changes that can disrupt the network. Every change has a risk plan, four approvals and a way back.</p>
+  </div>
+  <div class="cr">
+    <div class="cr-row"><div>Description</div><div>Upgrade Wi-Fi routers in Building B, or install new firewall software (from v5.2 to v6.0).</div></div>
+    <div class="cr-row"><div>Impact</div><div><span class="badge-high">High</span> – potential disruption to network services.</div></div>
+    <div class="cr-row"><div>Risk &amp; mitigation</div><div>Risk of downtime. The mitigation plan includes a full backup and scheduling during a 02:00 maintenance window.</div></div>
+    <div class="cr-row"><div>Approval signatures</div><div class="sign">
+      <span><em>Requester</em></span><span><em>Team Leader</em></span><span><em>IT Manager</em></span><span><em>Finance Department</em></span>
+    </div></div>
+    <div class="cr-row"><div>Implementation window</div><div>20 January 2024, 02:00 – 03:00</div></div>
+    <div class="cr-row"><div>Rollback plan</div><div>Revert to firewall version v5.2 if issues occur.</div></div>
+  </div>
+  <p class="cite">The Change Request process follows ITIL Change Enablement (Axelos, 2019), with a firewall upgrade example from Cisco Systems (2022).</p>
+</section>
+
+<section class="block" id="innovation">
+  <div class="sec-head">
+    <span class="tag">E · Innovation clause</span>
+    <h2>PriorityPilot AI with SmartResolve</h2>
+  </div>
+  <div class="innov">
+    <h3>Let AI set the priority and route the ticket.</h3>
+    <p>PriorityPilot AI integrates with SmartResolve to prioritize 60–80 weekly tickets by urgency and impact, then route each one to the correct level. Level 1 spends less time on complex conf[...]
+    <div class="rule-grid">
+      <div><b>60–80</b><span>tickets prioritized automatically each week</span></div>
+      <div><b>High</b><span>when 5 or more users are affected, or on a server outage</span></div>
+      <div><b>Auto</b><span>routing to the correct support level</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="block" id="references">
+  <div class="sec-head">
+    <span class="tag">References</span>
+    <h2>Sources</h2>
+  </div>
+  <div class="panel">
+    <ul class="refs">
+      <li>Axelos. 2019. <em>ITIL Foundation: ITIL 4 Edition</em>. London: TSO.</li>
+      <li>Cisco Systems. 2022. <em>Troubleshooting VLAN and Network Connectivity Issues</em>. Cisco Documentation. Available at: <a href="https://www.cisco.com/c/en/us/support/docs/lan-switching/">https://www.cisco.com/c/en/us/support/docs/lan-switching/</a></li>
+      <li>Microsoft. 2023. <em>Active Directory Account Lockout and Password Reset Procedures</em>. Microsoft Learn. Available at: <a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/identity/">https://learn.microsoft.com/en-us/troubleshoot/windows-server/identity/</a></li>
+      <li>The Independent Institute of Education (The IIE). 2026. <em>XHIS5122/p Module Manual – IT Systems Management – Task 2: IT Support Blueprint Case Study: NovaTech Solutions (Pty) Ltd</em></li>
+      <li>The Independent Institute of Education (The IIE). 2026. <em>TEWC5111 and CONE5111 – Workplace Communication and Professional Writing Guidelines – Email Templates, Cover Page and For</em></li>
+      <li>ManageEngine. 2023. <em>Best Practices for Help Desk Ticketing Systems and Escalation Matrix</em>. Available at: <a href="https://www.manageengine.com/products/service-desk/" target="_blank">https://www.manageengine.com/products/service-desk/</a></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>Confidential. Prepared for academic use only.</p>
+    <p>Property of NovaTech Solutions (Pty) Ltd and The Independent Institute of Education. Not for distribution.</p>
+    <p>IIE · Academic Submission · September 2026 · Module XHIS5122/p, Group 1</p>
+    <p>Disclaimer: I did the assignment alone without my group members.</p>
+  </div>
+</footer>
+<script>
+(function () {
+  var tickets = [
+    { id: "NT-2026-001", cat: "Network Connectivity", pri: "High", desc: "Internet/Wi-Fi failure for 5 users – warehouse VLAN 20", tech: "Alex Rivera", time: "2h 15m", status: "In Progress" },
+    { id: "NT-2026-002", cat: "Software", pri: "Medium", desc: "Password reset for user j.doe@novatech.com", tech: "Maya Kim", time: "45m", status: "Resolved" },
+    { id: "NT-2026-003", cat: "Hardware", pri: "Low", desc: "Mouse not responsive – desk 17 replaced", tech: "Liam Chen", time: "30m", status: "Resolved" },
+    { id: "NT-2026-004", cat: "Server Outage", pri: "High", desc: "DB Server CRMPROD01 unresponsive, service outage", tech: "Priya Singh", time: "4h 03m", status: "In Progress" },
+    { id: "NT-2026-005", cat: "Software", pri: "Medium", desc: "ERP login error – permission denied for accounting team", tech: "Jordan Lee", time: "1h 20m", status: "Open" }
+  ];
+  var state = { pri: "All", status: "All" };
+  var rows = document.getElementById("rows");
+  var empty = document.getElementById("empty");
+
+  function esc(s) { return String(s).replace(/[&<>\"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function pillClass(s) { return s === "Resolved" ? "pill resolved" : s === "Open" ? "pill open" : "pill"; }
+
+  function renderStats() {
+    var high = tickets.filter(function (t) { return t.pri === "High"; }).length;
+    var res = tickets.filter(function (t) { return t.status === "Resolved"; }).length;
+    var prog = tickets.filter(function (t) { return t.status === "In Progress"; }).length;
+    document.getElementById("stats").innerHTML =
+      '<div class="stat"><b>' + tickets.length + '</b><span>Total tickets</span></div>' +
+      '<div class="stat high"><b>' + high + '</b><span>High priority</span></div>' +
+      '<div class="stat"><b>' + prog + '</b><span>In progress</span></div>' +
+      '<div class="stat"><b>' + res + '</b><span>Resolved</span></div>';
+  }
+
+  function renderRows() {
+    var list = tickets.filter(function (t) {
+      return (state.pri === "All" || t.pri === state.pri) && (state.status === "All" || t.status === state.status);
+    });
+    rows.innerHTML = list.map(function (t) {
+      return '<tr class="' + (t.pri === "High" ? "is-high" : "") + '">' +
+        '<td class="id">' + esc(t.id) + '</td><td>' + esc(t.cat) + '</td><td>' + esc(t.pri) + '</td>' +
+        '<td>' + esc(t.desc) + '</td><td>' + esc(t.tech) + '</td><td class="num">' + esc(t.time) + '</td>' +
+        '<td><span class="' + pillClass(t.status) + '">' + esc(t.status) + '</span></td></tr>';
+    }).join("");
+    empty.hidden = list.length > 0;
+  }
+
+  function chips(containerId, key, values) {
+    var box = document.getElementById(containerId);
+    values.forEach(function (v) {
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "chip"; b.textContent = v;
+      b.setAttribute("aria-pressed", v === "All" ? "true" : "false");
+      b.addEventListener("click", function () {
+        state[key] = v;
+        box.querySelectorAll(".chip").forEach(function (c) { c.setAttribute("aria-pressed", c === b ? "true" : "false"); });
+        renderRows();
+      });
+      box.appendChild(b);
+    });
+  }
+
+  renderStats(); renderRows();
+  chips("fPriority", "pri", ["All", "High", "Medium", "Low"]);
+  chips("fStatus", "status", ["All", "Open", "In Progress", "Resolved"]);
+
+  /* email tabs */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll(".tab"));
+  function selectTab(i) {
+    tabs.forEach(function (t, j) {
+      var on = i === j;
+      t.setAttribute("aria-selected", on ? "true" : "false");
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById("p" + j).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener("click", function () { selectTab(i); });
+    t.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+        var n = (i + (e.key === "ArrowRight" ? 1 : tabs.length - 1)) % tabs.length;
+        selectTab(n); tabs[n].focus();
+      }
+    });
+  });
+})();
+</script>
+
+
+</body></html>
